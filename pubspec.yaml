@@ -1,0 +1,52 @@
+name: pulse
+description: A premium unified live sports hub for all major sports.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  # State management
+  flutter_riverpod: ^3.3.1
+  # HTTP
+  dio: ^5.4.0
+  # Navigation
+  go_router: ^17.2.0
+  # Animations
+  flutter_animate: ^4.3.0
+  # Cached images
+  cached_network_image: ^3.3.1
+  # Google Fonts
+  google_fonts: ^8.0.2
+  # Shimmer / Skeleton
+  shimmer: ^3.0.0
+  # SVG
+  flutter_svg: ^2.0.9
+  # Intl for date formatting
+  intl: ^0.20.2
+  # Connectivity
+  connectivity_plus: ^7.1.0
+  # Shared preferences
+  shared_preferences: ^2.2.2
+  # Equality
+  equatable: ^2.0.5
+  # Icons
+  iconsax: 0.0.8
+  # Pull to refresh
+  pull_to_refresh: ^2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.8
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/sports/
+    - assets/teams/
