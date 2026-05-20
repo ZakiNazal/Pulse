@@ -107,7 +107,7 @@ class MatchNotifier extends Notifier<MatchState> {
     state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
-      final matches = await service.getMatches();
+      final matches = await service.getMatches(forceRefresh: false);
       state = state.copyWith(
         allMatches: matches,
         isLoading: false,
@@ -124,6 +124,7 @@ class MatchNotifier extends Notifier<MatchState> {
   Future<void> refresh() async {
     _updateTimer?.cancel();
     final service = ref.read(matchServiceProvider);
+    service.invalidateCache();
     await _loadMatches(service);
   }
 

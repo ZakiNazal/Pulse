@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -405,7 +406,7 @@ class _MatchCardState extends State<MatchCard> {
   }
 }
 
-/// Team avatar with logo image or initials fallback.
+/// Team avatar — loads from URL (CachedNetworkImage) or falls back to initials.
 class _TeamAvatar extends StatelessWidget {
   const _TeamAvatar({
     this.logo,
@@ -420,28 +421,56 @@ class _TeamAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasAccent = accentColor != null;
+    final bg = hasAccent
+        ? accentColor!.withValues(alpha: 0.15)
+        : AppColors.surfaceLight;
 
-    return CircleAvatar(
-      radius: 20, // hardcoded size since we removed the size field
-      backgroundColor: hasAccent
-          ? accentColor!.withValues(alpha: 0.15)
-          : AppColors.surfaceLight,
-      backgroundImage: logo != null ? AssetImage(logo!) : null,
-      child: logo == null
-          ? Text(
+    Widget avatar;
+
+    if (logo != null && logo!.startsWith('http')) {
+      avatar = CircleAvatar(
+        radius: 20,
+        backgroundColor: bg,
+        child: ClipOval(
+          child: CachedNetworkImage(
+            imageUrl: logo!,
+            width: 36,
+            height: 36,
+            fit: BoxFit.contain,
+            placeholder: (_, __) => Text(
               initials,
               style: AppTextStyles.labelMedium.copyWith(
                 fontWeight: FontWeight.w700,
                 color: hasAccent ? accentColor : AppColors.textSecondary,
-                fontSize: 20 * 0.32, // hardcoded size since we removed the size field
+                fontSize: 13,
               ),
-            )
-          : null,
-    ).animate().fadeIn(duration: 400.ms).scale(
-          begin: const Offset(0.8, 0.8),
-          end: const Offset(1.0, 1.0),
-          duration: 400.ms,
-          curve: Curves.easeOutBack,
-        );
+            ),
+            errorWidget: (_, __, ___) => Text(
+              initials,
+              style: AppTextStyles.labelMedium.copyWith(
+                fontWeight: FontWeight.w700,
+                color: hasAccent ? accentColor : AppColors.textSecondary,
+                fontSize: 13,
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      avatar = CircleAvatar(
+        radius: 20,
+        backgroundColor: bg,
+        child: Text(
+          initials,
+          style: AppTextStyles.labelMedium.copyWith(
+            fontWeight: FontWeight.w700,
+            color: hasAccent ? accentColor : AppColors.textSecondary,
+            fontSize: 13,
+          ),
+        ),
+      );
+    }
+
+    return avatar;
   }
 }

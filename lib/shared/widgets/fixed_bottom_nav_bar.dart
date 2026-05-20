@@ -21,16 +21,18 @@ class FixedBottomNavBar extends ConsumerWidget {
     return Container(
       height: 80,
       decoration: BoxDecoration(
-        color: AppColors.glassBackground,
+        color: AppColors.surface,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
         ),
-        border: Border.all(color: AppColors.glassBorder, width: 0.5),
+        border: const Border(
+          top: BorderSide(color: AppColors.divider, width: 0.5),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 20,
+            color: Colors.black.withValues(alpha: 0.4),
+            blurRadius: 24,
             offset: const Offset(0, -4),
           ),
         ],

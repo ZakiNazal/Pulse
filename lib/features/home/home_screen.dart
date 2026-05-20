@@ -118,18 +118,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             // ── Top bar ─────────────────────────────────────────
             _buildTopBar(),
 
-            // ── Date ────────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                _formattedDate(),
-                style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ).animate().fadeIn(delay: 100.ms, duration: 400.ms),
-
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
 
             // ── Sport Selector ──────────────────────────────────
             SportSelector(
@@ -175,7 +164,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     .slideY(begin: -0.2, end: 0, duration: 400.ms, curve: Curves.easeOutCubic),
                 const SizedBox(height: 2),
                 Text(
-                  'Stay in the game',
+                  _formattedDate(),
                   style: AppTextStyles.bodySmall.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -382,6 +371,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       return _buildLoadingState();
     }
 
+    if (state.errorMessage != null && state.allMatches.isEmpty) {
+      return _buildErrorState(state.errorMessage!);
+    }
+
     final matches = _matchesForTab(tabIndex, state);
 
     if (matches.isEmpty) {
@@ -427,6 +420,69 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       physics: const NeverScrollableScrollPhysics(),
       itemCount: 6,
       itemBuilder: (context, index) => const MatchCardSkeleton(),
+    );
+  }
+
+  Widget _buildErrorState(String message) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 72,
+              height: 72,
+              decoration: BoxDecoration(
+                color: AppColors.surfaceLight,
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.divider),
+              ),
+              child: const Icon(
+                Icons.wifi_off_rounded,
+                size: 32,
+                color: AppColors.textTertiary,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Couldn\'t load matches',
+              style: AppTextStyles.bodyLarge.copyWith(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Check your connection and try again',
+              style: AppTextStyles.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            GestureDetector(
+              onTap: _onRefresh,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                decoration: BoxDecoration(
+                  color: AppColors.footballAccent.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppColors.footballAccent.withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Text(
+                  'Retry',
+                  style: AppTextStyles.labelLarge.copyWith(
+                    color: AppColors.footballAccent,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
